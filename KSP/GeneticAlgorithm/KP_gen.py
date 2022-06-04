@@ -1,3 +1,6 @@
+# Martín van Puffelen López
+# 0-1 Knapsack problem using Genetic Algorithms.
+
 import numpy as np
 from deap import base
 from deap import creator
@@ -9,8 +12,8 @@ import random
 # https://deap.readthedocs.io/en/master/examples/ga_knapsack.html
 
 N_INIT = 5 # Number of times an individual is instantiated
-MAX_ITEM = 10 # Maximum number of items that can be in the bag
-MAX_WEIGHT = 50 # Bag´s capacity
+MAX_ITEM = 5 # Maximum number of items that can be in the bag
+MAX_WEIGHT = 40 # Bag´s capacity
 N_ITEMS = 20 # Number of objects which are choosable
 
 # Item´s dictionary: identifier:(weight,value)
@@ -40,18 +43,12 @@ def evalKnapsack(individual):
     return weight, value
 
 def cxSet(ind1, ind2): # Crossover Function
-    """Apply a crossover operation on input sets. The first child is the
-    intersection of the two sets, the second child is the difference of the
-    two sets.
-    """
-    temp = set(ind1)                # Used in order to keep type
-    ind1 &= ind2                    # Intersection (inplace)
-    ind2 ^= temp                    # Symmetric Difference (inplace)
+    ind2 -= ind1                    # Difference (inplace)
     return ind1, ind2
 
 def mutSet(individual): # Mutation function
     if random.random() < 0.5:
-        if len(individual) > 0:     # We cannot pop from an empty set
+        if len(individual) > 0:
             individual.remove(random.choice(sorted(tuple(individual))))
     else:
         individual.add(random.randrange(N_ITEMS))
@@ -65,10 +62,10 @@ toolbox.register("select", tools.selNSGA2) # http://repository.ias.ac.in/83498/1
 
 def main():
     random.seed(128)
-    NGEN = 50 # Number of generations
+    NGEN = 100 # Number of generations
     POPSIZE = 50 # Population size
-    CXPB = 0.7 # Cross-over probability
-    MUTPB = 0.2 # Mutation probability
+    CXPB = 0.6 # Cross-over probability
+    MUTPB = 0.3 # Mutation probability
     LAMBDA = 100 # Offspring size
 
     pop = toolbox.population(n=POPSIZE)
