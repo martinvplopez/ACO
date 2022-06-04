@@ -9,11 +9,9 @@ from deap import algorithms
 import random
 
 
-# https://deap.readthedocs.io/en/master/examples/ga_knapsack.html
-
 N_INIT = 5 # Number of times an individual is instantiated
-MAX_ITEM = 5 # Maximum number of items that can be in the bag
-MAX_WEIGHT = 40 # Bag´s capacity
+MAX_ITEM = 10 # Maximum number of items that can be in the bag
+MAX_WEIGHT = 50 # Bag´s capacity
 N_ITEMS = 20 # Number of objects which are choosable
 
 # Item´s dictionary: identifier:(weight,value)
@@ -38,8 +36,8 @@ def evalKnapsack(individual):
     for item in individual:
         weight += items[item][0]
         value += items[item][1]
-    if len(individual) > MAX_ITEM or weight > MAX_WEIGHT:
-        return 10000, 0             # Erase individuals which are overweight or too many items.
+    if len(individual) > MAX_ITEM or weight > MAX_WEIGHT: # Erase individuals which are overweight or too many items.
+        return 10000, 0
     return weight, value
 
 def cxSet(ind1, ind2): # Crossover Function
