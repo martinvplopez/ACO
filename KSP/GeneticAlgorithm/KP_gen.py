@@ -9,7 +9,7 @@ import random
 # https://deap.readthedocs.io/en/master/examples/ga_knapsack.html
 
 N_INIT = 5 # Number of times an individual is instantiated
-MAX_ITEM = 5 # Maximum number of items that can be in the bag
+MAX_ITEM = 10 # Maximum number of items that can be in the bag
 MAX_WEIGHT = 50 # Bag´s capacity
 N_ITEMS = 20 # Number of objects which are choosable
 
@@ -17,6 +17,8 @@ N_ITEMS = 20 # Number of objects which are choosable
 items = {}
 for i in range(N_ITEMS):
     items[i] = (random.randint(1, 10), random.randint(0, 35))
+
+print(items)
 
 creator.create("Fitness", base.Fitness, weights=(-1.0, 1.0)) # Minimize weight and maximize value inside the bag
 creator.create("Individual", set, fitness=creator.Fitness)
@@ -73,16 +75,16 @@ def main():
     hof = tools.ParetoFront() # Contains list of fittest individuals
     stats = tools.Statistics(lambda ind: ind.fitness.values)
     stats.register("avg", np.mean, axis=0)
-    stats.register("std", np.std, axis=0)
+    # stats.register("std", np.std, axis=0)
     stats.register("min", np.min, axis=0)
     stats.register("max", np.max, axis=0)
 
 
-    algorithms.eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats,
-                              halloffame=hof)
+    # algorithms.eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats,
+    #                           halloffame=hof) # It uses mutation+crossover
 
-    # algorithms.eaMuPlusLambda(pop, toolbox, POPSIZE, LAMBDA, CXPB, MUTPB, NGEN, stats,
-    #                           halloffame=hof)
+    algorithms.eaMuPlusLambda(pop, toolbox, POPSIZE, LAMBDA, CXPB, MUTPB, NGEN, stats,
+                              halloffame=hof) # It uses mutation or crossover or selection defined by lambda iterations
 
     return pop, stats, hof
 
