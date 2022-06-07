@@ -1,26 +1,4 @@
 # Cycle Crossover Method
-# def cycle_cross(p1,p2):
-#     elementsChecked=1
-#     cycleNum=1
-#     cycles={}
-#     cycles[cycleNum]=[p1[0]]
-#     child=[]
-#     i=0
-#     j=0
-#     while elementsChecked<len(p1):
-#         if p1[i]==p2[j]:
-#             cycles[cycleNum].append(p1[j])
-#             i= j
-#             j = 0
-#             elementsChecked += 1
-#         j+=1
-#         if j==len(p1)-1:
-#             j=0
-#             for k in range(len(p1)):
-#                 if p1[k] in cycles[]
-#
-#     return cycles
-
 def cycle_cross_def(p1,p2):
     elementsChecked = 1
     cycleNum = 1
