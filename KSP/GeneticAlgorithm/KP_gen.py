@@ -55,7 +55,7 @@ def mutSet(individual): # Mutation function
 toolbox.register("evaluate", evalKnapsack)
 toolbox.register("mate", cxSet)
 toolbox.register("mutate", mutSet)
-toolbox.register("select", tools.selNSGA2) # http://repository.ias.ac.in/83498/1/2-a.pdf
+toolbox.register("select", tools.selNSGA2)
 
 
 def main():
@@ -70,22 +70,21 @@ def main():
     hof = tools.ParetoFront() # Contains list of fittest individuals
     stats = tools.Statistics(lambda ind: ind.fitness.values)
     stats.register("avg", np.mean, axis=0)
-    # stats.register("std", np.std, axis=0)
     stats.register("min", np.min, axis=0)
     stats.register("max", np.max, axis=0)
 
 
-    # algorithms.eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats,
-    #                           halloffame=hof) # It uses mutation+crossover
-
-    algorithms.eaMuPlusLambda(pop, toolbox, POPSIZE, LAMBDA, CXPB, MUTPB, NGEN, stats,
-                              halloffame=hof) # It uses mutation or crossover or selection defined by lambda iterations
+    algorithms.eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats,
+                              halloffame=hof) # It uses mutation+crossover
+    #
+    # algorithms.eaMuPlusLambda(pop, toolbox, POPSIZE, LAMBDA, CXPB, MUTPB, NGEN, stats,
+    #                           halloffame=hof) # It uses mutation or crossover or reproduction every lambda iterations
 
     return pop, stats, hof
 
 if __name__ == "__main__":
     pop, stats, hof = main()
     print("Best individual:", hof[-1])
-    print(len(pop))
-    print(len(hof))
-    print("The weight and value of the best package (best fitness):", evalKnapsack(hof[-1]))
+    for item in hof[-1]: # Selected elements
+        print(items[item])
+    print("The weight and value:", evalKnapsack(hof[-1]))
