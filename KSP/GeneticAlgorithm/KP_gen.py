@@ -40,9 +40,50 @@ def evalKnapsack(individual):
         return 10000, 0
     return weight, value
 
-def cxSet(ind1, ind2): # Crossover Function
-    ind2 -= ind1                    # Difference (inplace)
-    return ind1, ind2
+def cycleCross(p1,p2):
+    elementsChecked = 1
+    cycleNum = 1
+    cycles = [0] * len(p1)
+    cycles[0] = cycleNum
+    child = [0] * len(p1)
+    i = 0
+    j = 0
+    while elementsChecked < len(p1):
+        if p1[i] == p2[j]:
+            cycles[j] = cycleNum
+            i = j
+            j = 0
+            elementsChecked += 1
+        j += 1
+        if j == len(p1) and elementsChecked < len(p1):
+            j = 0
+            for k in range(len(p1)):
+                if cycles[k] == 0:
+                    i = k
+                    cycleNum += 1
+                    cycles[k] = cycleNum
+                    elementsChecked += 1
+                    break
+
+    for k in range(len(cycles)):
+        if cycles[k] % 2 == 0:  # Even cycle picks mother genes
+            child[k] = p2[k]
+        else:  # Odd cycle picks mother genes
+            child[k] = p1[k]
+    return child
+
+def cxSet(ind1, ind2): # Crossover Function Using Cycle Cross
+    ind3=list(ind1)
+    ind4=list(ind2)
+    # print("SET:",ind1,"LIST",ind3)
+    if len(ind3) == len(ind4) and len(ind3)!=0:
+        child=cycleCross(ind3,ind4)
+        child=creator.Individual(set(child))
+        # print(child)
+        return child, ind2
+    else:
+        ind2 -= ind1                    # Difference (inplace)
+        return ind1, ind2
 
 def mutSet(individual): # Mutation function
     if random.random() < 0.5:
@@ -74,16 +115,16 @@ def main():
     stats.register("max", np.max, axis=0)
 
 
-    algorithms.eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats,
-                              halloffame=hof) # It uses mutation+crossover
+    # algorithms.eaSimple(pop, toolbox, CXPB, MUTPB, NGEN, stats,
+    #                           halloffame=hof) # It uses mutation+crossover
     #
-    # algorithms.eaMuPlusLambda(pop, toolbox, POPSIZE, LAMBDA, CXPB, MUTPB, NGEN, stats,
-    #                           halloffame=hof) # It uses mutation or crossover or reproduction every lambda iterations
+    algorithms.eaMuPlusLambda(pop, toolbox, POPSIZE, LAMBDA, CXPB, MUTPB, NGEN, stats,
+                              halloffame=hof) # It uses mutation or crossover or reproduction every lambda iterations
 
     return pop, stats, hof
 
 if __name__ == "__main__":
-    pop, stats, hof = main()
+    pop, stats, hof= main()
     print("Best individual:", hof[-1])
     for item in hof[-1]: # Selected elements
         print(items[item])
